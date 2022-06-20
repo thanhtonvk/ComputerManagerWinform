@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Quan_ly_cua_hang.BLL;
 using Quan_ly_cua_hang.Model;
 using Quan_ly_cua_hang.Utils;
 
@@ -27,24 +28,24 @@ namespace Quan_ly_cua_hang.GUI
         }
         private void loadDataSanPham()
         {
-            string query = "select * from sanpham";
+            SanPhamBLL bll = new SanPhamBLL();
             dgv_dssp.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgv_dssp.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
-            dgv_dssp.DataSource = DBHelper.getDataSet(query).Tables[0];
+            dgv_dssp.DataSource = bll.getAll();
         }
         public void loadDuLieuKhachHang()
         {
-            string query = "SELECT * FROM VIEW_DSKHACHHANG";
+            KhachHangBLL bll = new KhachHangBLL();
             dgv_dskh.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgv_dskh.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
-            dgv_dskh.DataSource = DBHelper.getDataSet(query).Tables[0];
+            dgv_dskh.DataSource = bll.getAll();
         }
         public void loadCTHoaDonBan()
         {
-            string query = string.Format("USP_CHITIETHDB '{0}'", tb_mahdb.Text.Trim());
+            HoaDonBanBLL bll = new HoaDonBanBLL();
             dgv_Chitiethdb.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgv_Chitiethdb.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
-            dgv_Chitiethdb.DataSource = DBHelper.getDataSet(query).Tables[0];
+            dgv_Chitiethdb.DataSource = bll.getAllCTHDB(tb_mahdb.Text.Trim());
         }
         string makh;
         private void dgv_dskh_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -73,8 +74,9 @@ namespace Quan_ly_cua_hang.GUI
             }
             else
             {
-                string query = string.Format("USP_THEMHOADONBAN '{0}','{1}','{2}','{3}'", tb_mahdb.Text, DateTime.Now.ToString("yyyy-MM-dd"), NhanVienDAO.nv.Manv, makh);
-                DBHelper.Execute(query);
+                HoaDonBanBLL bll = new HoaDonBanBLL();
+                HoaDonBan hdb = new HoaDonBan(tb_mahdb.Text, DateTime.Now.ToString("yyyy-MM-dd"), NhanVienDAO.nv.Manv, makh);
+                bll.add(hdb);
                 MessageBox.Show("Thêm hóa đơn thành công, chọn sản phẩm cần mua");
             }
             mahdb = tb_mahdb.Text;
@@ -82,8 +84,9 @@ namespace Quan_ly_cua_hang.GUI
 
         private void button3_Click(object sender, EventArgs e)
         {
-            string query = string.Format("USP_THEMCHITIETHDB '{0}','{1}',{2}", tb_mahdb.Text, masp, 1);
-            DBHelper.Execute(query);
+            HoaDonBanBLL bll = new HoaDonBanBLL();
+           CTHDB cTHDB = new CTHDB( tb_mahdb.Text, masp, 1);
+            bll.addCTHD(cTHDB);
             loadCTHoaDonBan();
         }
 
