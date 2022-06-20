@@ -13,12 +13,12 @@ namespace Quan_ly_cua_hang.DAL
     {
         public void add(SanPham sp)
         {
-            string query = string.Format("USP_THEMSP '{0}',N'{1}',N'{2}',N'{3}',{4}", sp.MaSP1, sp.TenSP1, sp.CauHinh1, sp.Mau1, sp.GiaBan1);
+            string query = string.Format("USP_THEMSP '{0}',N'{1}',N'{2}',N'{3}',{4}", sp.MaSP, sp.TenSP, sp.CauHinh, sp.Mau, sp.GiaBan);
             DBHelper.Execute(query);
         }
         public void update(SanPham sp)
         {
-            string query = string.Format("USP_SUASP '{0}',N'{1}',N'{2}',N'{3}',{4}", sp.MaSP1, sp.TenSP1, sp.CauHinh1, sp.Mau1, sp.GiaBan1);
+            string query = string.Format("USP_SUASP '{0}',N'{1}',N'{2}',N'{3}',{4}", sp.MaSP, sp.TenSP, sp.CauHinh, sp.Mau, sp.GiaBan);
             DBHelper.Execute(query);
         }
         public void delete(string masv)
