@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Quan_ly_cua_hang.BLL;
 using Quan_ly_cua_hang.Model;
 using Quan_ly_cua_hang.Utils;
 
@@ -22,14 +23,15 @@ namespace Quan_ly_cua_hang.GUI
         private void frm_SanPham_Load(object sender, EventArgs e)
         {
             loadData();
-           
+
         }
+        SanPhamBLL bll = new SanPhamBLL();
         private void loadData()
         {
-            string query = "select * from sanpham";
+
             dgv_dssp.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgv_dssp.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
-            dgv_dssp.DataSource = DBHelper.getDataSet(query).Tables[0];
+            dgv_dssp.DataSource = bll.getAll();
         }
 
         private void button4_Click(object sender, EventArgs e)
@@ -46,15 +48,14 @@ namespace Quan_ly_cua_hang.GUI
 
         private void button1_Click(object sender, EventArgs e)
         {
-            string query = string.Format("USP_THEMSP '{0}',N'{1}',N'{2}',N'{3}',{4}", tb_masp.Text, tb_tensp.Text, tb_cauhinh.Text, tb_mau.Text, tb_giaban.Text);
-            DBHelper.Execute(query);
+            SanPham sp = new SanPham(tb_masp.Text, tb_tensp.Text, tb_cauhinh.Text, tb_mau.Text, tb_giaban.Text);
+            bll.add(sp);
             loadData();
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
-            string query = string.Format("USP_XOASP '{0}'", tb_masp.Text);
-            DBHelper.Execute(query);
+            bll.delete(tb_masp.Text);
             loadData();
         }
         string masp;
@@ -73,15 +74,15 @@ namespace Quan_ly_cua_hang.GUI
 
         private void button2_Click(object sender, EventArgs e)
         {
-            string query = string.Format("USP_SUASP '{0}',N'{1}',N'{2}',N'{3}',{4}", tb_masp.Text, tb_tensp.Text, tb_cauhinh.Text, tb_mau.Text, tb_giaban.Text);
-            DBHelper.Execute(query);
+            SanPham sp = new SanPham(tb_masp.Text, tb_tensp.Text, tb_cauhinh.Text, tb_mau.Text, tb_giaban.Text);
+            bll.update(sp);
             loadData();
         }
 
         private void button5_Click(object sender, EventArgs e)
         {
-            string query = string.Format("USP_TIMKIEMSP '{0}'", tb_timkiem.Text);
-            dgv_dssp.DataSource = DBHelper.getDataSet(query).Tables[0];
+          
+            dgv_dssp.DataSource = bll.timKiem(tb_timkiem.Text);
         }
     }
 }

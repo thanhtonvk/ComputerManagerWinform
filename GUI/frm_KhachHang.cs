@@ -8,6 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Quan_ly_cua_hang;
+using Quan_ly_cua_hang.BLL;
+using Quan_ly_cua_hang.Model;
 using Quan_ly_cua_hang.Utils;
 
 namespace Quan_ly_cua_hang.GUI
@@ -18,11 +20,17 @@ namespace Quan_ly_cua_hang.GUI
         {
             InitializeComponent();
         }
-
+        KhachHangBLL bll = new KhachHangBLL();
         private void button1_Click(object sender, EventArgs e)
         {
-            string query = string.Format("USP_THEMKHACHHANG '{0}','{1}','{2}'",tb_makh,tb_ten.Text,tb_sdt.Text);
-            DBHelper.Execute(query);
+            KhachHang kh = new KhachHang()
+            {
+                MaKH = tb_makh.Text,
+                TenKH = tb_ten.Text,
+                SDT = tb_sdt.Text
+            };
+
+            bll.add(kh);
             loadDuLieu();
         }
 
@@ -32,16 +40,23 @@ namespace Quan_ly_cua_hang.GUI
         }
         public void loadDuLieu()
         {
-            string query = "SELECT * FROM VIEW_DSKHACHHANG";
+
+
             dgv_dskh.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgv_dskh.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
-            dgv_dskh.DataSource = DBHelper.getDataSet(query).Tables[0];
+            dgv_dskh.DataSource = bll.getAll();
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            string query = string.Format("USP_SUAKHACHHANG '{0}','{1}','{2}'",makh,tb_ten.Text,tb_sdt.Text);
-            DBHelper.Execute(query);
+            KhachHang kh = new KhachHang()
+            {
+                MaKH = tb_makh.Text,
+                TenKH = tb_ten.Text,
+                SDT = tb_sdt.Text
+            };
+
+            bll.update(kh);
             loadDuLieu();
         }
         string makh;
@@ -58,15 +73,13 @@ namespace Quan_ly_cua_hang.GUI
 
         private void button3_Click(object sender, EventArgs e)
         {
-            string query = string.Format("USP_XOAKHACHHANG '{0}'", makh.Trim());
-            DBHelper.Execute(query);
+            bll.delete(makh);
             loadDuLieu();
         }
 
         private void button5_Click(object sender, EventArgs e)
         {
-            string query = string.Format("USP_TIMKIEMKHACHHANG '{0}'", tb_timkiem.Text);
-            dgv_dskh.DataSource = DBHelper.getDataSet(query).Tables[0];
+            dgv_dskh.DataSource = bll.timKiem(tb_timkiem.Text);
         }
 
         private void button4_Click(object sender, EventArgs e)
